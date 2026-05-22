@@ -1,103 +1,114 @@
-# Deployment Guide: cshappyanniversary.com
+# Deployment Guide: cshappyanniversary.com with Netlify
 
-Your project is now ready to be deployed to the internet with your custom domain!
+Your project is now ready to be deployed to the internet with your custom domain using **Netlify**!
 
-## Step 1: Create a GitHub Repository
+## Step 1: Verify GitHub Repository
 
-1. Go to [GitHub.com](https://github.com) and log in (create an account if needed)
-2. Click the **+** icon in the top right → **New repository**
-3. Name your repository (e.g., `cshappyanniversary` or `lensar-webar`)
-4. Choose **Public** (required for GitHub Pages free tier)
-5. Click **Create repository**
+✅ You've already completed this! Your code is pushed to GitHub.
 
-## Step 2: Push Your Code to GitHub
+Check that your repository is **public** and on the **main** branch.
 
-After creating the repository, follow the commands GitHub shows you. Typically:
+## Step 2: Connect to Netlify
 
-```bash
-git add .
-git commit -m "Initial commit"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
-git push -u origin main
-```
+1. Go to [Netlify.com](https://www.netlify.com)
+2. Click **Sign up** (or log in if you have an account)
+3. Choose **Sign up with GitHub**
+4. Authorize Netlify to access your GitHub account
+5. Click **Import an existing project**
+6. Select your repository (e.g., `cshappyanniversary`)
+7. Click **Deploy site**
 
-Replace `YOUR_USERNAME` and `YOUR_REPO_NAME` with your actual GitHub username and repository name.
+Netlify will automatically:
+- Detect your Vite configuration
+- Run `npm run build`
+- Deploy your `dist` folder
+- Assign you a temporary URL (e.g., `https://xxxxx.netlify.app`)
 
-## Step 3: Enable GitHub Pages
+**Wait for the build to complete** (you'll see a green success message)
 
-1. Go to your repository on GitHub
-2. Click **Settings** → **Pages** (left sidebar)
-3. Under "Build and deployment":
-   - Select **GitHub Actions** as the source
-4. GitHub will automatically detect and use the deploy workflow we created
-5. Wait for the first deployment to complete (you'll see a checkmark in the Actions tab)
+## Step 3: Register Your Domain
 
-## Step 4: Register Your Domain
+### Free Options:
+- **Freenom**: Free `.tk`, `.ml`, `.ga`, `.cf` domains → https://www.freenom.com
+- **Example**: `cshappyanniversary.tk`
 
-Choose where to buy your domain:
-- **Affordable & Popular**: Namecheap, GoDaddy, Google Domains
-- **Recommended**: Namecheap (good pricing, excellent support)
+### Budget Options:
+- **GoDaddy**: $2.99/year (first year) → https://www.godaddy.com
+- **Namecheap**: $8.88/year → https://www.namecheap.com
 
-1. Search for `cshappyanniversary.com`
+1. Choose your registrar and search for your domain
 2. Complete the purchase
-3. (Keep the registrar tab open for the next step)
+3. Keep your registrar tab open for Step 4
 
-## Step 5: Configure DNS for Custom Domain
+## Step 4: Connect Custom Domain to Netlify
 
-After purchasing, you need to point your domain to GitHub Pages:
+### Via Netlify DNS (Easiest - Only works for new domain registrations):
+1. In your Netlify site settings: **Domain management** → **Add a domain**
+2. Enter your domain (e.g., `cshappyanniversary.com`)
+3. Netlify will show nameservers to add to your registrar
 
-### Option A: Using GitHub's Nameservers (Easiest)
-1. In your domain registrar, change the nameservers to:
-   - `ns-1930.awsdns-49.com`
-   - `ns-1366.awsdns-43.com`
-   - `ns-1521.awsdns-54.org`
-   - `ns-504.awsdns-63.net`
-   (These are examples; GitHub will provide specific ones)
-
-2. In GitHub repository → Settings → Pages:
-   - Enter `cshappyanniversary.com` in the "Custom domain" field
-   - Check "Enforce HTTPS"
-   - GitHub will verify and create the DNS records
-
-### Option B: Using CNAME Record (Works with most registrars)
-1. In your domain registrar's DNS settings
-2. Add a CNAME record:
-   - **Name**: `www`  (or leave blank for root domain)
-   - **Value**: `YOUR_USERNAME.github.io`
+### Via CNAME Record (Works with any registrar):
+1. In your Netlify site settings: **Domain management** → **Add a domain**
+2. Enter your domain
+3. Get your Netlify subdomain name
+4. Go to your domain registrar's DNS settings
+5. Add a CNAME record:
+   - **Name**: `www`
+   - **Value**: `YOUR_SITE.netlify.app`
    - **TTL**: 3600
 
-3. For the root domain (@), add an A record pointing to:
-   - `185.199.108.153`
-   - `185.199.109.153`
-   - `185.199.110.153`
-   - `185.199.111.153`
+6. For root domain (@), update to point to Netlify's load balancer IP (Netlify provides this)
 
-4. In GitHub repository → Settings → Pages:
-   - Enter `cshappyanniversary.com` in the "Custom domain" field
-   - Check "Enforce HTTPS"
+## Step 5: Enable HTTPS
+
+1. In Netlify site settings: **Domain management**
+2. Under "HTTPS" section, click **Verify DNS configuration**
+3. Netlify automatically provisions an SSL certificate (usually within minutes)
 
 ## Step 6: Verify Everything Works
 
 1. Wait 5-15 minutes for DNS to propagate
-2. Visit `https://cshappyanniversary.com` in your browser
+2. Visit `https://cshappyanniversary.com` (or your chosen domain)
 3. You should see your deployed application!
-4. If it doesn't work, check:
-   - ✓ GitHub Pages shows "active" status
-   - ✓ DNS records are correctly configured (use `nslookup` or online DNS checker)
-   - ✓ HTTPS is enabled
+
+**If it doesn't work:**
+- Clear your browser cache or use incognito mode
+- Check DNS: `nslookup cshappyanniversary.com`
+- Verify Netlify shows a green "Connected" status
+- Check Netlify's Deploy log for build errors
 
 ## Step 7: Future Updates
 
-Every time you push to the `main` branch, the application automatically rebuilds and deploys (thanks to the GitHub Actions workflow we created).
+Every time you push to the `main` branch on GitHub, Netlify automatically rebuilds and redeploys!
 
 To update your site:
 ```bash
 # Make your changes locally
 git add .
 git commit -m "Your commit message"
-git push
+git push origin main
 ```
+
+Watch the deploy in real-time on your Netlify dashboard.
+
+## Netlify Benefits
+
+✅ **Free tier includes:**
+- Automatic HTTPS with Let's Encrypt
+- Continuous deployment from Git
+- 300 build minutes/month (more than enough!)
+- Fast CDN globally
+- Environment variables support
+- Branch deployments for testing
+
+## Advanced: Set Environment Variables
+
+If you need API keys or secrets:
+1. Netlify Dashboard → Site settings → **Build & deploy** → **Environment**
+2. Add your variables
+3. They're automatically available during builds
+
+They won't be exposed to the browser (secure!).
 
 ---
 
